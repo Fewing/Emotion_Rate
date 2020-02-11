@@ -4,6 +4,6 @@ from tensorflow import keras
 if __name__ == '__main__':
     model = keras.models.load_model('./model/model.h5')
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
-    converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]
     tflite_model = converter.convert()
-    open("./model/model.tflite", "wb").write(tflite_model)
+    open("./model/model_default.tflite", "wb").write(tflite_model)

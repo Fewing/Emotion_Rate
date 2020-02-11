@@ -20,7 +20,7 @@ def find_and_save_face(web_file,face_file):
         # You can access the actual face itself like this:
         face_image = image[top:bottom, left:right]
         pil_image = Image.fromarray(face_image)
-        pil_image.resize((128, 128)).save(face_file)
+        pil_image.save(face_file)
 
 if __name__ == "__main__":
     list = os.listdir("./image/")

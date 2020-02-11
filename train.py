@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow import keras
 import tensorflow_core
 from sklearn.model_selection import train_test_split
-from tensorflow.keras import layers
 import pandas as pd
 
 import numpy as np
@@ -16,9 +15,10 @@ if __name__ == '__main__':
     resnet = keras.applications.ResNet50(
         include_top=False, pooling='avg', input_shape=(128, 128, 3))
     model.add(resnet)
-    model.add(layers.Dense(1))
+    model.add(keras.layers.Dense(1))
     model.layers[0].trainable = False
     '''
+    使用SCUT数据集
     ratings = pd.read_excel('./SCUT-FBP5500_v2/All_Ratings.xlsx')
 
     filenames = ratings.groupby('Filename').size().index.tolist()
@@ -43,22 +43,6 @@ if __name__ == '__main__':
         y = y.astype('float32')
         X[i] = x
         Y[i] = y
-    
-    model.add(layers.Conv2D(24, (5, 5), padding='same', input_shape=(128, 128, 3),
-                            use_bias=True, kernel_initializer='random_normal', bias_initializer='random_normal'))
-    model.add(layers.Activation('relu'))
-    model.add(layers.Conv2D(96, (5, 5), use_bias=True,
-                            kernel_initializer='random_normal', bias_initializer='random_normal'))
-    model.add(layers.Activation('relu'))
-    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-    model.add(layers.Dropout(0.5))
-
-    model.add(layers.Flatten())
-    model.add(layers.Dense(256, kernel_initializer='random_normal',
-                           bias_initializer='random_normal'))
-    model.add(layers.Activation('relu'))
-    model.add(layers.Dropout(0.5))
-    model.add(layers.Dense(1))
     '''
     model.summary()
     image_data_list = []
