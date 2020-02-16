@@ -8,7 +8,7 @@ import time
 
 if __name__ == '__main__':
     start_time = time.time()
-    interpreter = tf.lite.Interpreter(model_path="./model/model_fast.tflite")
+    interpreter = tf.lite.Interpreter(model_path="./model/model.tflite")
     interpreter.allocate_tensors()
 
     # Get input and output tensors.
@@ -16,18 +16,20 @@ if __name__ == '__main__':
     print(str(input_details))
     output_details = interpreter.get_output_details()
     print(str(output_details))
-    image_list = os.listdir("./val_image")
+    image_list = os.listdir("./test_image")
     model_interpreter_time = 0
     label = []
     predictions = []
+    test_data = []
     # 遍历文件
     for image in image_list:
         print('=========================')
-        label.append(float(image.split('-')[0])-3.0)
-        full_path = os.path.join("./val_image", image)
+        #label.append(float(image.split('-')[0])-3.0)
+        full_path = os.path.join("./test_image", image)
         #预处理
         image = keras.preprocessing.image.load_img(full_path, target_size=(128, 128))
         image = np.array(image)
+        test_data.append(image)
         image = image.astype('float32')
         image /= 255
         image_np_expanded = np.expand_dims(image, axis=0)
@@ -48,7 +50,14 @@ if __name__ == '__main__':
     used_time = time.time() - start_time
     print('used_time:{}'.format(used_time))
     print('model_interpreter_time:{}'.format(model_interpreter_time))
-    plt.scatter(label, predictions, s=0.5)
-    plt.plot(label, label)
+    plt.figure(figsize=(10,10))
+    for i in range(0,len(image_list)):
+        width=int(math.sqrt(len(image_list)))+1
+        plt.subplot(width,width,i+1)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(test_data[i])
+        plt.grid(False)
+        plt.xlabel(predictions[i]+3.0)
     plt.show()
 
