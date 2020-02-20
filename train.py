@@ -11,8 +11,7 @@ import random
 
 if __name__ == '__main__':
     model = keras.Sequential()
-
-    resnet = keras.applications.ResNet50(
+    resnet = keras.applications.resnet_v2.ResNet50V2(
         include_top=False, pooling='avg', input_shape=(128, 128, 3))
     model.add(resnet)
     model.add(keras.layers.Dense(1))
@@ -58,7 +57,7 @@ if __name__ == '__main__':
     img_data = img_data.astype('float32')
     img_data /= 255
     label = np.array(label)
-    
+
     X = img_data
     Y = label
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
@@ -66,24 +65,29 @@ if __name__ == '__main__':
                   optimizer='adam')
     print(y_train)
     history = model.fit(x=X_train, y=y_train, batch_size=64,
-                     epochs=50, verbose=1)
-    model.layers[0].trainable = True
-    model.compile(loss='mse', optimizer='adam')
-    history = model.fit(x=X_train,
-                        y=y_train,
-                        batch_size=8,
-                        epochs=20,
-                        validation_data=(X_test, y_test),
-                        verbose=1)
-    
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Model loss')
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
-    model.save('./model/model.h5')  # 保存模型
+                        epochs=50, verbose=1)
     plt.scatter(y_test, model.predict(X_test), s=0.5)
     plt.plot(y_test, y_test)
-    plt.show()
+    plt.savefig("val.jpg")
+    model.layers[0].trainable = True
+    model.compile(loss='mse', optimizer='adam')
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(
+        filepath='ckpt/model.h5', save_best_only=True, mode='min', monitor='val_loss', verbose=1)
+    reduce_learning_rate = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss',
+                                             factor=0.1,
+                                             patience=2,
+                                             cooldown=2,
+                                             min_lr=0.00001,
+                                             verbose=1)
+    history = model.fit(x=X_train,
+                        y=y_train,
+                        batch_size=16,
+                        epochs=30,
+                        validation_data=(X_test, y_test),
+                        verbose=1,
+                        callbacks=[checkpoint,reduce_learning_rate])
+    # model.save('./model/model.h5')  # 保存模型
+    best_model = keras.models.load_model('./ckpt/model.h5')
+    plt.scatter(y_test, best_model.predict(X_test), s=0.5)
+    plt.plot(y_test, y_test)
+    plt.savefig("val.jpg")
