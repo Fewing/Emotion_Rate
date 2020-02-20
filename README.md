@@ -1,2 +1,2 @@
 # emotion_rate
-基于CNN的表情评分
+基于Resnet-50的表情评分
