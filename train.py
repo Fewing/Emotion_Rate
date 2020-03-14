@@ -57,7 +57,6 @@ if __name__ == '__main__':
     img_data = img_data.astype('float32')
     img_data /= 255
     label = np.array(label)
-
     X = img_data
     Y = label
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)

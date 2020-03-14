@@ -1,12 +1,13 @@
+import math
+import os
+
+import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-import numpy as np
-import matplotlib.pyplot as plt
-import os
-import math
 
 if __name__ == '__main__':
-    model = keras.models.load_model('./model/model.h5')
+    model = keras.models.load_model('./ckpt/model.h5')
     model.summary()
     test_data_list = []
     test_image_list = os.listdir("./test_image/")
