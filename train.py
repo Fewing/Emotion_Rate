@@ -11,38 +11,11 @@ import random
 
 if __name__ == '__main__':
     model = keras.Sequential()
-    resnet = keras.applications.resnet_v2.ResNet50V2(
+    resnet = keras.applications.resnet.ResNet50(
         include_top=False, pooling='avg', input_shape=(128, 128, 3))
     model.add(resnet)
     model.add(keras.layers.Dense(1))
     model.layers[0].trainable = False
-    '''
-    使用SCUT数据集
-    ratings = pd.read_excel('./SCUT-FBP5500_v2/All_Ratings.xlsx')
-
-    filenames = ratings.groupby('Filename').size().index.tolist()
-    labels = []
-
-    for filename in filenames:
-        df = ratings[ratings['Filename'] == filename]
-        score = round(df['Rating'].mean(), 2)
-        labels.append({'Filename': filename, 'score': score})
-
-    labels_df = pd.DataFrame(labels)
-    sample_dir = './SCUT-FBP5500_v2/Images/'
-    nb_samples = len(os.listdir(sample_dir))
-    input_shape = (350, 350, 3)
-    X = np.empty((nb_samples, 350, 350, 3), dtype=np.float32)
-    Y = np.empty((nb_samples, 1), dtype=np.float32)
-    for i, fn in enumerate(os.listdir(sample_dir)):
-        img = keras.preprocessing.image.load_img('%s/%s' % (sample_dir, fn))
-        x = keras.preprocessing.image.img_to_array(img).reshape(350, 350, 3)
-        x = x.astype('float32') / 255.
-        y = labels_df[labels_df.Filename == fn].score.values
-        y = y.astype('float32')
-        X[i] = x
-        Y[i] = y
-    '''
     model.summary()
     image_data_list = []
     label = []
@@ -63,8 +36,9 @@ if __name__ == '__main__':
     model.compile(loss='mse',
                   optimizer='adam')
     print(y_train)
+    tf.keras.utils.plot_model(model, to_file='model.png')
     history = model.fit(x=X_train, y=y_train, batch_size=64,
-                        epochs=50, verbose=1)
+                        epochs=30, verbose=1)
     plt.scatter(y_test, model.predict(X_test), s=0.5)
     plt.plot(y_test, y_test)
     plt.savefig("val.jpg")
