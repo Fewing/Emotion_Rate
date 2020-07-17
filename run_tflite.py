@@ -8,7 +8,7 @@ import time
 
 if __name__ == '__main__':
     start_time = time.time()
-    interpreter = tf.lite.Interpreter(model_path="./model/model.tflite")
+    interpreter = tf.lite.Interpreter(model_path="./model/model_default.tflite")
     interpreter.allocate_tensors()
 
     # Get input and output tensors.

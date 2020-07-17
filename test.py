@@ -7,7 +7,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 if __name__ == '__main__':
-    model = keras.models.load_model('./ckpt/model.h5')
+    model = keras.models.load_model('./model/model.h5')
     model.summary()
     tf.keras.utils.plot_model(model, to_file='model.png')
     test_data_list = []

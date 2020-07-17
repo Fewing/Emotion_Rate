@@ -45,7 +45,7 @@ if __name__ == '__main__':
     model.layers[0].trainable = True
     model.compile(loss='mse', optimizer='adam')
     checkpoint = tf.keras.callbacks.ModelCheckpoint(
-        filepath='ckpt/model.h5', save_best_only=True, mode='min', monitor='val_loss', verbose=1)
+        filepath='model/model.h5', save_best_only=True, mode='min', monitor='val_loss', verbose=1)
     reduce_learning_rate = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss',
                                              factor=0.1,
                                              patience=2,
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                         verbose=1,
                         callbacks=[checkpoint,reduce_learning_rate])
     # model.save('./model/model.h5')  # 保存模型
-    best_model = keras.models.load_model('./ckpt/model.h5')
+    best_model = keras.models.load_model('./model/model.h5')
     plt.scatter(y_test, best_model.predict(X_test), s=0.5)
     plt.plot(y_test, y_test)
     plt.savefig("val.jpg")
