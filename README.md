@@ -35,7 +35,7 @@
 
 ### 1.转换
 
-如需将Keras模型转换为TensorFlow模型，运行`transfer_model.py`
+如需将Keras模型转换为TensorFlow Lite模型，运行`transfer_model.py`
 
 ### 2.测试
 
